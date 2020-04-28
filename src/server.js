@@ -52,7 +52,7 @@ const startServer = port => {
   server.listen(port);
   
     
-    console.log('Listening on port 3007');
+    console.log('Listening on port 3000');
   };
 
 
