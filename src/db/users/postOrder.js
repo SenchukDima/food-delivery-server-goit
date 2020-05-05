@@ -4,13 +4,21 @@ const path = require('path');
 
 const sandOrder = (req, res, next) => {
 
-   const deliveryAdressText = 'Kyiv';
+const userID = req.query.user;
+
+const productsId = req.query.products.split(',');
+
+const deliveryAdress = req.query.deliveryAdress;
+
    const order = {
-    "user": 558959483762604, 
-    "products": [19112835, 19112831, 19112834],
+    "user": userID, 
+    "products": [+productsId[0], +productsId[1], +productsId[2]],
     "deliveryType": "delivery",
-    "deliveryAdress": deliveryAdressText
+    "deliveryAdress": deliveryAdress
    }
+
+console.log(order);
+
 
    res.set("Content-Type", "application/json");
   
@@ -18,10 +26,8 @@ const sandOrder = (req, res, next) => {
 
     res.body = order;
 
-//    console.log(res.body);
-
    const orderProductsId = res.body.products;
-    // console.log(productsId);
+   
 
     const src = path.join(__dirname, '../products', 'all-products.json');
     
@@ -34,7 +40,6 @@ const sandOrder = (req, res, next) => {
         for (let i = 0; i < orderProductsId.length; i++) {
             
             let searchedProducts = productsList.filter(productsList=> productsList.id === +orderProductsId[i])[0];
-            // console.log(searchedProducts);
             
             if(searchedProducts === undefined) {
                 orderProducts = null;
@@ -59,8 +64,6 @@ const sandOrder = (req, res, next) => {
                 fs.mkdirSync(orderFolder);
             }
 
-            // console.log(order.user);
-            
             const orderData = {...order, id: Math.ceil(Math.random()* 10000000)};
 console.log(orderData);
 
