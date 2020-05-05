@@ -1,41 +1,59 @@
 
-const http = require('http');
-const querystring = require('querystring');
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 
-const userData = querystring.stringify({
-  "username": "Ivan",
-  "telephone": "063 777 77 77",
-  "password": "12345",
-  "email": "ivan@gmail.com"
- });
- 
 
-const options = {
-  hostname: 'localhost',
-  port: 3000,
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Content-Length': Buffer.byteLength(userData)
-  }
+const usersFolder = path.join(__dirname , '../users');
+
+
+
+const writeFile = util.promisify(fs.writeFile);
+
+   const saveNewUser = (fileName, data) => {
+    const src = path.join(usersFolder, fileName + '.json');
+    const dataStr = JSON.stringify(data);
+  
+    return writeFile(src, dataStr);
+  }; 
+
+const saveUserFile = (request, response, next) => {
+     const user = {
+      "username": "Ivan",
+      "telephone": "063 777 77 77",
+      "password": "12345",
+      "email": "ivan@gmail.com"
+     };
+
+     const user2 = {
+      "username": "Maks",
+      "telephone": "063 999 99 99",
+      "password": "54321",
+      "email": "makss007@gmail.com"
+     };
+     
+const userData = [{...user, id: Math.random()},{...user2, id: Math.random()}];
+
+  const fileName = 'all-users';
+
+  const sendResponse = () => {
+    response.json({
+      status: 'success',
+      user: userData
+  })};
+
+const sendError = () => {
+  response.status(400);
+  response.json({
+    error: 'user was not saved'
+  });
 };
 
-const signUpRoute = (req, res) => {
-
-  
-  req = http.request(options, function (res) {
-    res.setEncoding('utf8');
-  
-  });
-  
-  req.on('error', function (e) {
-    console.log('Problem with request:', e.message);
-  });
-  
-  req.write(userData);
-  req.end();
-    
+saveNewUser(fileName, userData) 
+.then(sendResponse)
+.catch(sendError);
 
 }
 
-module.exports = signUpRoute;
+
+module.exports = saveUserFile;
