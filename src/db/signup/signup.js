@@ -1,57 +1,35 @@
-
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
-
-
-const usersFolder = path.join(__dirname , '../users');
+'use strict'
+const mongoose = require('mongoose');
+const User = require('./signupSchema');
 
 
+const saveUserFile = async (req, res) => {
 
-const writeFile = util.promisify(fs.writeFile);
-
-   const saveNewUser = (fileName, data) => {
-    const src = path.join(usersFolder, fileName + '.json');
-    const dataStr = JSON.stringify(data);
-  
-    return writeFile(src, dataStr);
-  }; 
-
-const saveUserFile = (request, response, next) => {
-     const user = {
+     const user1 = {
       "username": "Ivan",
       "telephone": "063 777 77 77",
       "password": "12345",
       "email": "ivan@gmail.com"
      };
 
-     const user2 = {
-      "username": "Maks",
-      "telephone": "063 999 99 99",
-      "password": "54321",
-      "email": "makss007@gmail.com"
-     };
-     
-const userData = [{...user, id: Math.random()},{...user2, id: Math.random()}];
+     res.body = user1;
 
-  const fileName = 'all-users';
-
-  const sendResponse = () => {
-    response.json({
-      status: 'success',
-      user: userData
-  })};
-
-const sendError = () => {
-  response.status(400);
-  response.json({
-    error: 'user was not saved'
-  });
-};
-
-saveNewUser(fileName, userData) 
-.then(sendResponse)
-.catch(sendError);
+     const user = new User({
+       _id: new mongoose.Types.ObjectId(),
+       username: res.body.username,
+       telephone: res.body.telephone,
+       password: res.body.password,
+       email: res.body.email
+      });
+      user.save()
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => console.log(err));
+      res.status(201).json({
+        message: "POST +",
+        createdUser: user
+      })
 
 }
 

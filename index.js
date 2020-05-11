@@ -1,4 +1,7 @@
+'use strict'
 const startServer = require('./src/server.js');
-const port = 3000;
+const port = 27017;
+
+
 
 startServer(port);

@@ -1,37 +1,31 @@
-const fs = require('fs');
-const path = require('path');
+'use strict'
+const User = require('../signup/signupSchema');
 
 
 
+const getUserByID = (req, res) => {
 
-const getUserByID = (request, response, next) => {
 
-
-    const userId = request.params;
-    console.log(userId);
-    
-  
-        const usersSrc = path.join(__dirname, 'all-users.json');
-        console.log(usersSrc);
-        
-    
-        const userMass = JSON.parse(fs.readFileSync(usersSrc));
-        console.log(userMass[0].id);
-        
-        
-        const searchedUser = {...userMass.filter(userMass => userMass.id == userId.id)}[0];
-        
-        if(searchedUser === undefined) {
-            response.status(400);
-            response.json({
-            'status': 'no products', 'products': []
-    });
+    User.findOne({ 
+        _id: req.params.id
+        },)
+    .then(user => {
+        console.log('From database', user);
+        if (user) {
+            req.body = user;
+            res.status(200).json({
+                "status": "success", 
+                "product": user
+               })
+            console.log(req.body);
         } else {
+            res
+            .status(404)
+            .json({'status': 'no user', 'user': []})
+        }
         
-        response.set("Content-Type", "application/json");
-        response.status(200);
-        response.json({ user: searchedUser});
-    }
+    })
+        
   };
   
   module.exports = getUserByID;
