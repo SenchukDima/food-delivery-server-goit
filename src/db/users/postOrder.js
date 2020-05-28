@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const Order = require('./postOrderSchema');
 
 const sendOrder = (req, res) => {
-    
+  if (!req.headers['x-auth']) { return res.sendStatus(401);
+  } else {
     const order1 = {
         "creator": "5eb3334fdba71179113705d6",
         "product": "19112833",
@@ -42,7 +43,7 @@ const sendOrder = (req, res) => {
           message: "POST +",
           createdUser: order
         })
-   
+      }
 }
 
 module.exports = sendOrder;

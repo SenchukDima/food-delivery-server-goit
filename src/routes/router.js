@@ -1,28 +1,33 @@
 'use strict'
 const express = require('express');
 const mainRoute = require('../db/main/main');
-const addProductsRoute = require('../db/products/products');
-const saveUserFile = require('../db/signup/signup');
-const getProductByID = require('../db/products/getProduct');
+const addProductInFile = require('../db/products/addProductsInFile');
+const userRegistration = require('../db/signup/userRegistration');
 const getUserByID = require('../db/users/getUser');
 const sendOrder = require('../db/users/postOrder');
 const getOrders = require('../db/users/getOrders');
 const updateUser = require('../db/signup/updateUser');
-const likeProduct = require('../db/products/likeProduct')
-
+const authorizationLogin = require('../db/authorization/authorizationLogin');
+const userLogout = require('../db/authorization/userLogout');
+const currentUser = require('../db/authorization/currentUser');
+const addComent = require('../db/users/coments/addComent');
+const getProductComents = require('../db/users/coments/getProductComents')
 const router = express.Router();
 
 
 router
   .get('/', mainRoute)
-  .get('/products', addProductsRoute)
-  .get('/products/:id', getProductByID)
-  .put('/products/:id', likeProduct)
-  .post('/signup', saveUserFile)
+  .post('./fileproducts', addProductInFile)
   .get('/user/:id', getUserByID)
   .put('/user/:id', updateUser)
   .post('/orders', sendOrder)
   .get('/orders/:id', getOrders)
+  .post('/auth/register', userRegistration)
+  .post('/auth/login', authorizationLogin)
+  .get('/auth/logout', userLogout)
+  .get('/auth/current', currentUser)
+  .post('/coments', addComent)
+  .get('/coments', getProductComents)
   .get('*', (req, res, next) => {
     res.status(404).send('Route not exists');
 })

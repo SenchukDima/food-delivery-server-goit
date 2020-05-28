@@ -4,7 +4,8 @@ const User = require('../signup/signupSchema');
 
 
 const getUserByID = (req, res) => {
-
+    if (!req.headers['x-auth']) { return res.sendStatus(401);
+    } else {
 
     User.findOne({ 
         _id: req.params.id
@@ -25,7 +26,7 @@ const getUserByID = (req, res) => {
         }
         
     })
-        
+    }
   };
   
   module.exports = getUserByID;

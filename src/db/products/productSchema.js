@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const productsSchema = new mongoose.Schema({
+	"_id": mongoose.Schema.Types.ObjectId,
     "id": String,
 	"sku": Number,
 	"name": String,
@@ -11,9 +12,8 @@ const productsSchema = new mongoose.Schema({
 	"created": String,
 	"modified": String,
     "categories": Array,
-    "likes": Number
+	"likes": Number,
+	"ingredient": [{ type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient' }, { type: mongoose.Schema.Types.ObjectId, ref: 'Ingredient' }]
   });
 
-  module.exports = mongoose.model('Products', productsSchema);
-
-  
+  module.exports = mongoose.model('Product', productsSchema);

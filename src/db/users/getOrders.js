@@ -4,7 +4,8 @@ const Order = require('./postOrderSchema');
 
 
 const getOrders = (req, res) => {
-
+    if (!req.headers['x-auth']) { return res.sendStatus(401);
+    } else {
 
     Order.findOne({ 
         _id: req.params.id
@@ -25,6 +26,7 @@ const getOrders = (req, res) => {
         }
         
     })
+}
   };
   
   module.exports = getOrders;
